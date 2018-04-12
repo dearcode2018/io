@@ -1,0 +1,66 @@
+Java NIO
+
+1) 从 jdk1.4开始，开始引入 nio.
+2) NIO提供了与标准IO不同的IO工作方式，
+A.Channel and Buffers (通道和缓冲区): 标注的IO基于字节流和字符流进行操作，而NIO是基于通道(channel)和缓冲区(buffer)
+进行操作，数据总是从通道读取到缓冲区，或者从缓冲区写入到通道中.
+
+B.Asynchronous IO (异步IO): NIO可以异步使用IO，例如，当线程从通道读取数据到缓冲区时，线程还是可以进行其他事的。
+当数据被写入到缓冲区时，线程还可以继续处理它，从缓冲区写入通道也类似.
+
+C. Selectors (选择器): 选择器用于监听多个通道事件(例如，连接打开，数据到达)。因此，单个线程可以监听多个数据通道.
+
+3) channel的实现
+FileChannel
+DatagramChannel
+SocketChannel
+ServerSocketChannel
+
+4) Selector
+选择器允许单线程处理多个channel。例如在一个应用中打开多个连接(通道)，但每个连接的流量都很低，使用selector就会很方便.
+要使用selector，就要向selector注册Channel，然后调用它的select()方法，这个方法会一直阻塞到某个注册的通道有事件就绪.
+一旦这个方法返回，线程就可以处理这些事件，事件的例子有新连接进来、数据接收等.
+
+5) 
+IO面向流，NIO面向缓冲区.
+在NIO中，一个线程请求一些数据写入到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情，线程通常将非阻塞IO
+的空闲时间用于其他通道上执行IO操作，所以一个线程可以管理多个输入和输出通道.
+
+6)缓冲区(Buffer)
+capacity: 容量，作为一个内存块，Buffer有一个固定大小的值，只能往内存块里写capacity个byte/long/char...，一旦Buffer满了，
+需要将其清空(通过读数据或者清除数据)才能继续往里写数据.
+position: 位置，当写数据到Buffe中时，position表示当前的位置，初始的position为0，最大值为postion - 1.
+当读数据时，也是从某个特定位置读，当Buffer从写模式切换到读模式时，position被重置为0，当Buffer的position处
+读取数据时，position向前移动到下一个可读位置.
+limit: 极限，在写模式下，limit表示最多可以往Buffer中写多少个数据，此时limit==capactiy.
+当切换到读模式时，limit表示最多能读取多少数据，
+读写模式下，position和limit含义不同，capacity的含义都是相同的.
+
+Buffer.equals(): 只比较Buffer中的剩余元素.
+当满足下列条件时，表示两个Buffer相等：
+有相同的类型（byte、char、int等）。
+Buffer中剩余的byte、char等的个数相等。
+Buffer中所有剩余的byte、char等都相同。
+
+compareTo()方法
+compareTo()方法比较两个Buffer的剩余元素(byte、char等)， 如果满足下列条件，则认为一个Buffer“小于”另一个Buffer：
+    第一个不相等的元素小于另一个Buffer中对应的元素。
+    所有元素都相等，但第一个Buffer比另一个先耗尽(第一个Buffer的元素个数比另一个少)。
+（译注：剩余元素是从 position到limit之间的元素） 
+
+7) 分散(Scatter) / 聚集 (Gather)
+分散: 从一个通道中将读取的数据写入多个Buffer中.
+聚集: 将多个Buffer中的数据写入一个通道中.
+
+
+为什么使用Selector?
+
+仅用单个线程来处理多个Channels的好处是，只需要更少的线程来处理通道。事实上，可以只用一个线程处理所有的通道。
+对于操作系统来说，线程之间上下文切换的开销很大，而且每个线程都要占用系统的一些资源（如内存）。因此，使用的线程越少越好。
+
+但是，需要记住，现代的操作系统和CPU在多任务方面表现的越来越好，
+所以多线程的开销随着时间的推移，变得越来越小了。实际上，如果一个CPU有多个内核，不使用多任务可能是在浪费CPU能力。
+
+
+
+
