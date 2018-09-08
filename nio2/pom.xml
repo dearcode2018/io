@@ -7,20 +7,20 @@
 		<version>0.0.1</version>
 	</parent>	
 
-	<artifactId>io</artifactId>
+	<artifactId>nio2</artifactId>
 	<packaging>jar</packaging>
-	<name>io</name>
+	<name>nio2</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
-		<common.version>0.0.1</common.version>
+		<io.core.version>0.0.1</io.core.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.hua</groupId>
-			<artifactId>common</artifactId>
-			<version>${common.version}</version>
+			<artifactId>io-core</artifactId>
+			<version>${io.core.version}</version>
 		</dependency>
 		
 	</dependencies>

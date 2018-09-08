@@ -12,8 +12,9 @@
 		<!-- 模板 -->
 		<module>io-template</module>		
 		<module>guava-io</module>		
-		<module>io</module>		
+		<module>io-core</module>		
 		<module>nio</module>		
+		<module>nio2</module>
 		<module>serialize</module>		
 	</modules>
  

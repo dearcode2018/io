@@ -1,5 +1,4 @@
 Java NIO
-NIO: Non-blocking IO (非阻塞IO)
 
 1) 从 jdk1.4开始，开始引入 nio.
 2) NIO提供了与标准IO不同的IO工作方式，

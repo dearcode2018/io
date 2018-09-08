@@ -13,15 +13,15 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
-		<io.version>0.0.1</io.version>
+		<io.core.version>0.0.1</io.core.version>
 		<guava-io.version>r03</guava-io.version>		
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.hua</groupId>
-			<artifactId>io</artifactId>
-			<version>${io.version}</version>
+			<artifactId>io-core</artifactId>
+			<version>${io.core.version}</version>
 		</dependency>
 		
 		<dependency>
