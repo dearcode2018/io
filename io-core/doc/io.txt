@@ -1,3 +1,11 @@
+IO
+
+https://www.cnblogs.com/dolphin0520/p/3916526.html
+
+概念
+
+NIO: None-blocking IO 非阻塞IO
+
 
 
 

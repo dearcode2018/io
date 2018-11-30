@@ -1,11 +1,11 @@
 /**
  * 描述: 
- * SelectorTest.java
+ * IntBufferTest.java
  * 
  * @author qye.zheng
  *  version 1.0
  */
-package com.hua.test.nio.selector;
+package com.hua.test.nio.buffer;
 
 //静态导入
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.nio.channels.Selector;
+import java.nio.IntBuffer;
 
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -42,38 +42,47 @@ import com.hua.test.BaseTest;
  * 描述: 
  * 
  * @author qye.zheng
- * SelectorTest
+ * IntBufferTest
  */
 //@DisplayName("测试类名称")
 //@Tag("测试类标签")
 //@Tags({@Tag("测试类标签1"), @Tag("测试类标签2")})
-public final class SelectorTest extends BaseTest {
+public final class IntBufferTest extends BaseTest {
 
-	
 	/**
 	 * 
-	 * 描述: 
-	 * @author qye.zheng
-	 * 
+	 * @description 
+	 * @author qianye.zheng
 	 */
-	//@DisplayName("test")
 	@Test
-	public void testSelector() {
+	public void testIntBuffer() {
 		try {
-			
-			// 打开Selector
-			Selector selector = Selector.open();
 			/*
-			 * 注册到Selector
-			 * 
+			 * 分配指定容量的int缓冲区
+			 * 缓冲区的当前位置为0，其界限(限制位置)为其容量，结构为一个底层实现数组，数组偏移量为0
 			 */
+			IntBuffer buffer = IntBuffer.allocate(8);
+			for (int i = 0; i < buffer.capacity(); i++)
+			{
+				buffer.put(i +1);
+			}
 			
+			// 重设此缓冲区，将限制设置为当前位置，再将当前位置设置为0
+			buffer.flip();
 			
+			// 判断在当前位置(经过flip之后当前位置为起始位置)是否有元素
+			while (buffer.hasRemaining())
+			{
+				System.out.print(buffer.get() + " ");
+			}
+			// 换行
+			System.out.println();
 			
 		} catch (Exception e) {
-			log.error("testSelector =====> ", e);
+			log.error("testIntBuffer =====> ", e);
 		}
 	}
+	
 	
 	/**
 	 * 
