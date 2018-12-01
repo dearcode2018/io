@@ -100,12 +100,12 @@ public final class PathTest extends BaseTest {
 			log.info("testPathBuild =====> fileName = " + path.getFileName());
 			// 该路径有多少个可命名的路径
 			log.info("testPathBuild =====> " + path.getNameCount());
-			// D:\workspace
+			// X:\workspace
 			log.info("testPathBuild =====> " + path.getName(0).getFileName());
-			// D:\workspace\java\nio\doc\path\path.txt
-			log.info("testPathBuild =====> " + path.getName(5).getFileName());
-			// D:\workspace\java\nio\doc\path\project.txt
+			// X:\workspace\java\nio\doc\path\path.txt
 			log.info("testPathBuild =====> " + path.getName(6).getFileName());
+			// X:\workspace\java\nio\doc\path\project.txt
+			log.info("testPathBuild =====> " + path.getName(7).getFileName());
 		} catch (Exception e) {
 			log.error("testPathBuild =====> ", e);
 		}

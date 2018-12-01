@@ -7,12 +7,17 @@
  */
 package com.hua.test;
 
+// 静态导入
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -28,16 +33,16 @@ import java.io.Reader;
 import java.io.SequenceInputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
+import com.hua.constant.Constant;
 import com.hua.log.BaseLog;
+import com.hua.util.ClassPathUtil;
 
 /**
  * 描述: 测试基类
@@ -46,12 +51,10 @@ import com.hua.log.BaseLog;
  * @author qye.zheng
  * BaseTest
  */
-//@RunWith(JUnitPlatform.class)
-//@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@DisplayName("BaseTest")
+//@RunWith()
 public class BaseTest extends BaseLog {
 	
-public static final String BASIC_DIR = "/file/txt/";
+	public static final String BASIC_DIR = "/file/txt/";
 	
 	public static String inputPath;
 	
@@ -125,10 +128,38 @@ public static final String BASIC_DIR = "/file/txt/";
 	 * @author qye.zheng
 	 * 
 	 */
-	@DisplayName("beforeClass")
-	@BeforeAll
+	@BeforeClass
 	public static void beforeClass() {
 		System.out.println("beforeClass()");
+		inputPath = ClassPathUtil.getClassSubpath(BASIC_DIR + "input.txt");
+		outputPath = ClassPathUtil.getClassSubpath(BASIC_DIR + "output.txt");
+		try
+		{
+			inputStream = new FileInputStream(inputPath);
+			outputStream = new FileOutputStream(outputPath);
+			
+			inputStreamReader = new InputStreamReader(inputStream, 
+					Constant.CHART_SET_UTF_8);
+			outputStreamWriter = new OutputStreamWriter(outputStream, 
+					Constant.CHART_SET_UTF_8);
+			
+			// 默认缓存大小是 8192 个 byte
+			bufferedInputStream = new BufferedInputStream(inputStream);
+			// bufferedInputStream = new BufferedInputStream(inputStream, 2);
+			bufferedOutputStream = new BufferedOutputStream(outputStream);
+			
+			bufferedReader = new BufferedReader(inputStreamReader);
+			bufferedWriter = new BufferedWriter(outputStreamWriter);
+			
+			lineNumberReader = new LineNumberReader(inputStreamReader);
+			
+		} catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -137,34 +168,56 @@ public static final String BASIC_DIR = "/file/txt/";
 	 * @author qye.zheng
 	 * 
 	 */
-	@DisplayName("afterClass")
-	@AfterAll
+	@AfterClass
 	public static void afterClass() {
 		System.out.println("afterClass()");
-	}
-	
-	/**
-	 * 
-	 * 描述: [每个测试-方法]开始之前运行
-	 * @author qye.zheng
-	 * 
-	 */
-	@DisplayName("beforeMethod")
-	@BeforeEach
-	public void beforeMethod() {
-		System.out.println("beforeMethod()");
-	}
-	
-	/**
-	 * 
-	 * 描述: [每个测试-方法]结束之后运行
-	 * @author qye.zheng
-	 * 
-	 */
-	@DisplayName("afterMethod")
-	@AfterEach
-	public void afterMethod() {
-		System.out.println("afterMethod()");
+		// 关闭流
+		try
+		{
+			// 先关闭包装流
+			if (null != bufferedInputStream)
+			{
+				bufferedInputStream.close();
+			}
+			if (null != bufferedOutputStream)
+			{
+				bufferedOutputStream.close();
+			}
+			if (null != bufferedReader)
+			{
+				bufferedReader.close();
+			}
+			if (null != bufferedWriter)
+			{
+				bufferedWriter.close();
+			}
+			
+			if (null != lineNumberReader)
+			{
+				lineNumberReader.close();
+			}
+			
+			if (null != inputStreamReader)
+			{
+				inputStreamReader.close();
+			}
+			if (null != outputStreamWriter)
+			{
+				outputStreamWriter.close();
+			}
+			
+			if (null != inputStream)
+			{
+				inputStream.close();
+			}
+			if (null != outputStream)
+			{
+				outputStream.close();
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 }

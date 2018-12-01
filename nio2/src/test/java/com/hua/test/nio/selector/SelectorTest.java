@@ -18,15 +18,21 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-
-import java.nio.channels.Selector;
-
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,18 +66,256 @@ public final class SelectorTest extends BaseTest {
 	@Test
 	public void testSelector() {
 		try {
-			
 			// 打开Selector
 			Selector selector = Selector.open();
+			ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			serverSocketChannel.bind(socketAddress);
 			/*
+			 * 设置为非阻塞，调用accept()方法不会阻塞
+			 * 返回一个空Channel对象
 			 * 注册到Selector
-			 * 
+			 * 文件通道是阻塞的，可以选择套接字或其他通道
 			 */
+			//serverSocketChannel.configureBlocking(false);
+			SocketChannel channel = serverSocketChannel.accept();
+			/*
+			 * SelectionKey.OP_READ 指定监听事件类型
+			 * 对多个监听事件感兴趣，可以用 位或 操作符将常量连接起来
+			 */
+			int interestSet = SelectionKey.OP_ACCEPT | SelectionKey.OP_READ 
+					| SelectionKey.OP_CONNECT;
+			SelectionKey selectionKey = channel.register(selector, SelectionKey.OP_WRITE);
+			// 带附加对象
+			//SelectionKey selectionKey = channel.register(selector, SelectionKey.OP_READ, new Object());
+			interestSet = selectionKey.interestOps();
+			// 设置感兴趣集合
+			//selectionKey.interestOps(11);
+			// 获取ready集合
+			//int readyOps = selectionKey.readyOps();
+			//SelectableChannel selectableChannel = selectionKey.channel();
+			//selector = selectionKey.selector();
 			
+			/*
+			 * 选择通道，一直阻塞，可以设置阻塞超时时间
+			 * selector.select(long timeout)
+			 * 返回上次select之后，又有多少个通道进入就绪状态
+			 */
+			//selector.select();
+			// 非阻塞方法，若没有通道可选直接返回0
+			//selector.selectNow();
 			
+			/*
+			 * 唤醒其他线程调用该对象的select()方法
+			 * 若当前没有线程阻塞在select()方法上，则下一个调用select()方法的
+			 * 线程会即可返回，不会阻塞.
+			 */
+			//selector.wakeup();
+			
+			//selectionKey.selector();
+			
+			// 遍历通道
+			Set<SelectionKey> selectedKeySet = selector.selectedKeys();
+			Iterator<SelectionKey> iterator = selectedKeySet.iterator();
+			while (iterator.hasNext())
+			{
+				SelectionKey key = iterator.next();
+				if (key.isAcceptable())
+				{
+					System.out.println("acceptable");
+				} else if (key.isConnectable())
+				{
+					System.out.println("connectable");
+				} else if (key.isReadable())
+				{
+					System.out.println("readable");
+				}
+				// 移除当前对象
+				iterator.remove();
+			}
 			
 		} catch (Exception e) {
 			log.error("testSelector =====> ", e);
+		}
+	}
+	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testSelector2() {
+		try {
+			// 打开Selector
+			Selector selector = Selector.open();
+			ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			serverSocketChannel.bind(socketAddress);
+			SocketChannel channel = serverSocketChannel.accept();
+			/*
+			 * 是accept方法返回的Channel对象
+			 * 设置为非阻塞，调用accept()方法不会阻塞
+			 * 返回一个空Channel对象
+			 * 注册到Selector
+			 * 文件通道是阻塞的，可以选择套接字或其他通道
+			 */
+			channel.configureBlocking(false);
+			/*
+			 * SelectionKey.OP_READ 指定监听事件类型
+			 * 对多个监听事件感兴趣，可以用 位或 操作符将常量连接起来
+			 * 按照顺序来与或，OP_READ OP_WRITE OP_CONNECT OP_ACCEPT
+			 */
+			int interestSet = SelectionKey.OP_READ | SelectionKey.OP_WRITE;
+			SelectionKey selectionKey = channel.register(selector, interestSet);
+			//System.out.println(selectionKey.isConnectable());
+			
+			/*
+			 * 执行选择selectedKeys才有值
+			 */
+			selector.select();
+			Set<SelectionKey> selectedKeySet = selector.selectedKeys();
+			
+			Iterator<SelectionKey> iterator = selectedKeySet.iterator();
+			while (iterator.hasNext())
+			{
+				SelectionKey key = iterator.next();
+				if (key.isAcceptable())
+				{
+					System.out.println("acceptable");
+				} else if (key.isConnectable())
+				{
+					System.out.println("connectable");
+				} else if (key.isReadable())
+				{
+					System.out.println("readable");
+					ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+					channel.read(buffer);
+					buffer.flip();
+					while (buffer.hasRemaining())
+					{
+						System.out.print(buffer.get() + " ");
+					}
+					
+				}
+				// 移除当前对象
+				iterator.remove();
+			}
+			
+		} catch (Exception e) {
+			log.error("testSelector2 =====> ", e);
+		}
+	}
+	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testServer() {
+		try {
+			// 打开Selector
+			Selector selector = Selector.open();
+			ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			serverSocketChannel.bind(socketAddress);
+			/*
+			 * 设置为非阻塞，调用accept()方法不会阻塞
+			 * 返回一个空Channel对象
+			 * 注册到Selector
+			 * 文件通道是阻塞的，可以选择套接字或其他通道
+			 */
+			//serverSocketChannel.configureBlocking(false);
+			SocketChannel channel = serverSocketChannel.accept();
+			ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+			channel.read(buffer);
+			buffer.flip();
+			while (buffer.hasRemaining())
+			{
+				System.out.print(buffer.get() + " ");
+			}
+			
+		} catch (Exception e) {
+			log.error("testServer =====> ", e);
+		}
+	}
+	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testClient() {
+		try {
+			SocketChannel socketChannel = SocketChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			// 连接远程
+			socketChannel.connect(socketAddress);
+			//socketChannel.configureBlocking(false);
+			ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+			
+			/*
+			 * 将position设置为0，limit设置为capacity
+			 */
+			for (int i = 0; i < buffer.capacity(); i++)
+			{
+				buffer.put((byte) (i + 1));
+			}
+			
+			buffer.flip();
+			socketChannel.write(buffer);
+			
+			buffer.clear();
+			socketChannel.close();
+			socketChannel.close();
+			
+		} catch (Exception e) {
+			log.error("testClient =====> ", e);
+		}
+	}
+	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testClient2() {
+		try {
+			SocketChannel socketChannel = SocketChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			// 连接远程
+			socketChannel.connect(socketAddress);
+			//socketChannel.configureBlocking(false);
+			ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+			
+			/*
+			 * 将position设置为0，limit设置为capacity
+			 */
+			for (int i = 0; i < buffer.capacity(); i++)
+			{
+				buffer.put((byte) (i + 1));
+			}
+			
+			buffer.flip();
+			//socketChannel.write(buffer);
+			
+			buffer.clear();
+			socketChannel.close();
+			socketChannel.close();
+			
+		} catch (Exception e) {
+			log.error("testClient2 =====> ", e);
 		}
 	}
 	
