@@ -1,11 +1,11 @@
 /**
  * 描述: 
- * ChannelTest.java
+ * DatagramChannelTest.java
  * 
  * @author qye.zheng
  *  version 1.0
  */
-package com.hua.test.aio;
+package com.hua.test.nio.channel;
 
 //静态导入
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -19,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
@@ -39,15 +44,99 @@ import com.hua.test.BaseTest;
  * 描述: 
  * 
  * @author qye.zheng
- * ChannelTest
+ * DatagramChannelTest
  */
 //@DisplayName("测试类名称")
 //@Tag("测试类标签")
 //@Tags({@Tag("测试类标签1"), @Tag("测试类标签2")})
-public final class ChannelTest extends BaseTest {
+public final class DatagramChannelTest extends BaseTest {
 
 	
+	/*
+	 * DatagramChannel: 可以收发UDP包的通道
+	 */
 	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testDatagramChannel() {
+		try {
+			
+			DatagramChannel channel = DatagramChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			channel.socket().connect(socketAddress);
+			
+			
+		} catch (Exception e) {
+			log.error("testDatagramChannel =====> ", e);
+		}
+	}
+	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testServer() {
+		try {
+			DatagramChannel channel = DatagramChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			channel.socket().bind(socketAddress);
+			ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+			channel.receive(buffer);
+			buffer.flip();
+			while (buffer.hasRemaining())
+			{
+				System.out.print(buffer.get() + " ");
+			}
+			
+		} catch (Exception e) {
+			log.error("testServer =====> ", e);
+		}
+	}
+	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testClient() {
+		try {
+			DatagramChannel channel = DatagramChannel.open();
+			InetSocketAddress socketAddress = new InetSocketAddress("127.0.0.1", 8087);
+			//channel.socket().connect(socketAddress);
+			ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+			
+			/*
+			 * 将position设置为0，limit设置为capacity
+			 */
+			for (int i = 0; i < buffer.capacity(); i++)
+			{
+				buffer.put((byte) (i + 1));
+			}
+			buffer.flip();
+			channel.connect(socketAddress);
+			channel.write(buffer);
+			
+			buffer.clear();
+			channel.close();
+			//channel.send(buffer, socketAddress);
+			
+		} catch (Exception e) {
+			log.error("testClient =====> ", e);
+		}
+	}
 	
 	/**
 	 * 
