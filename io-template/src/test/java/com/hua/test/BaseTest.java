@@ -131,8 +131,8 @@ public class BaseTest extends BaseLog {
 	@BeforeClass
 	public static void beforeClass() {
 		System.out.println("beforeClass()");
-		inputPath = ClassPathUtil.getClassSubpath(BASIC_DIR + "input.txt");
-		outputPath = ClassPathUtil.getClassSubpath(BASIC_DIR + "output.txt");
+		inputPath = ClassPathUtil.getClassPath(BASIC_DIR + "input.txt");
+		outputPath = ClassPathUtil.getClassPath(BASIC_DIR + "output.txt");
 		try
 		{
 			inputStream = new FileInputStream(inputPath);

@@ -148,7 +148,7 @@ public final class SerializeTest extends BaseTest {
 			subNoSuperNo.setLoginTime(DateTimeUtil.getTime());
 			SubNoSuperNo.setDescription("描述信息");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "SubNoSuperNo_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "SubNoSuperNo_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);
@@ -223,7 +223,7 @@ public final class SerializeTest extends BaseTest {
 			//subHasSuperNo.setNoSerializableObject(new NoSerializableObject());
 			SubHasSuperNo.setDescription("描述信息");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "SubHasSuperNo_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "SubHasSuperNo_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);
@@ -291,7 +291,7 @@ public final class SerializeTest extends BaseTest {
 			subNoSuperHas.setLoginTime(DateTimeUtil.getTime());
 			SubHasSuperNo.setDescription("描述信息");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "SubNoSuperHas_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "SubNoSuperHas_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);
@@ -362,7 +362,7 @@ public final class SerializeTest extends BaseTest {
 			subHasSuperHas.setLoginTime(DateTimeUtil.getTime());
 			SubHasSuperNo.setDescription("描述信息");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "SubHasSuperHas_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "SubHasSuperHas_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);
@@ -432,7 +432,7 @@ public final class SerializeTest extends BaseTest {
 			hasDefaultConstructor.setLoginTime(DateTimeUtil.getTime());
 			hasDefaultConstructor.setLoginIp("192.0.25.2");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "login_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "login_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);
@@ -477,7 +477,7 @@ public final class SerializeTest extends BaseTest {
 	@Test
 	public void testReadObject() {
 		try {
-			//path = ClassPathUtil.getClassSubpath(baseDir + "");
+			//path = ClassPathUtil.getClassPath(baseDir + "");
 			inputStream = ClassPathUtil.getInputStream(baseDir + "login_test.txt");
 			// 对象输入 - 接口对象
 			objectInput = new ObjectInputStream(inputStream);
@@ -525,7 +525,7 @@ public final class SerializeTest extends BaseTest {
 			hasDefaultConstructor.setLoginTime(DateTimeUtil.getTime());
 			hasDefaultConstructor.setLoginIp("192.0.25.2");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "login_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "login_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);

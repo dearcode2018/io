@@ -4,23 +4,20 @@
 	<parent>
 		<groupId>com.hua</groupId>
 		<artifactId>io-entire</artifactId>
-		<version>0.0.1</version>
+		<version>1.0.0</version>
 	</parent>	
 
 	<artifactId>nio2</artifactId>
 	<packaging>jar</packaging>
 	<name>nio2</name>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
-		<io.core.version>0.0.1</io.core.version>
+
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.hua</groupId>
 			<artifactId>io-core</artifactId>
-			<version>${io.core.version}</version>
 		</dependency>
 		
 	</dependencies>

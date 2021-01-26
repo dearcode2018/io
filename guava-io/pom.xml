@@ -4,30 +4,25 @@
 	<parent>
 		<groupId>com.hua</groupId>
 		<artifactId>io-entire</artifactId>
-		<version>0.0.1</version>
+		<version>1.0.0</version>
 	</parent>	
 
 	<artifactId>guava-io</artifactId>
 	<packaging>jar</packaging>
 	<name>guava-io</name>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
-		<io.core.version>0.0.1</io.core.version>
-		<guava-io.version>r03</guava-io.version>		
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.hua</groupId>
 			<artifactId>io-core</artifactId>
-			<version>${io.core.version}</version>
 		</dependency>
 		
 		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava-io</artifactId>
-		    <version>${guava-io.version}</version>
 		</dependency>		
 		
 	</dependencies>

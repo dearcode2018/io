@@ -66,7 +66,7 @@ public final class SequenceTest extends BaseTest {
 			InputStream secondInputStream = ClassPathUtil.getInputStream(BASIC_DIR + "小说_文本_01.txt");
 			
 			// 输出 顺序输入的结果
-			outputStream = new FileOutputStream(ClassPathUtil.getClassSubpath(BASIC_DIR + "sequence-result.txt"));
+			outputStream = new FileOutputStream(ClassPathUtil.getClassPath(BASIC_DIR + "sequence-result.txt"));
 			
 			// 使用两个输入流进行顺序输出
 			sequenceInputStream = new SequenceInputStream(firstInputStream, secondInputStream);

@@ -57,7 +57,7 @@ public final class SerializeServiceTest extends BaseTest {
 		try {
 			SerializeService<ExternalEntity> serializeService =
 					new SerializeServiceImpl<ExternalEntity>();
-			path = ClassPathUtil.getClassSubpath(baseDir) + "ExternalEntity_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "ExternalEntity_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);
@@ -84,7 +84,7 @@ public final class SerializeServiceTest extends BaseTest {
 		try {
 			SerializeService<ExternalEntity> serializeService =
 					new SerializeServiceImpl<ExternalEntity>();
-			path = ClassPathUtil.getClassSubpath(baseDir) + "ExternalEntity_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "ExternalEntity_test.txt";
 			
 			inputStream = ClassPathUtil.getInputStream(baseDir + "ExternalEntity_test.txt");
 			
@@ -112,7 +112,7 @@ public final class SerializeServiceTest extends BaseTest {
 			hasDefaultConstructor.setLoginTime(DateTimeUtil.getTime());
 			hasDefaultConstructor.setLoginIp("192.0.25.2");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "HasDefaultConstructor_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "HasDefaultConstructor_test.txt";
 			
 			// 输出到文件
 			outputStream = new FileOutputStream(path);
@@ -141,7 +141,7 @@ public final class SerializeServiceTest extends BaseTest {
 			hasDefaultConstructor.setLoginTime(DateTimeUtil.getTime());
 			hasDefaultConstructor.setLoginIp("192.0.25.2");
 			
-			path = ClassPathUtil.getClassSubpath(baseDir) + "HasDefaultConstructor_test.txt";
+			path = ClassPathUtil.getClassPath(baseDir) + "HasDefaultConstructor_test.txt";
 			
 			inputStream = ClassPathUtil.getInputStream(baseDir + "HasDefaultConstructor_test.txt");
 			

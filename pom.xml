@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.hua</groupId>
   <artifactId>io-entire</artifactId>
-  <version>0.0.1</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>io-entire</name>
   <description>io Maven Entire Project</description>
@@ -23,7 +23,7 @@
 	<properties>
 		<jdk.version>1.8</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.version>0.0.1</maven.version>
+		<maven.version>1.0.0</maven.version>
 		<maven.plugin.compiler.version>3.3</maven.plugin.compiler.version>
 		<maven.plugin.source.version>2.4</maven.plugin.source.version>
 		<maven.plugin.surefire.version>2.18.1</maven.plugin.surefire.version>
@@ -31,8 +31,31 @@
 		<maven.plugin.resources.version>2.7</maven.plugin.resources.version>
 		<maven.plugin.dependency.version>2.10</maven.plugin.dependency.version>
 		<maven.plugin.war.version>3.0</maven.plugin.war.version>
+		<io.core.version>1.0.0</io.core.version>		
+		<guava-io.version>r03</guava-io.version>	
+		<common.version>1.0.0</common.version>				
 	</properties>  
   
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.hua</groupId>
+				<artifactId>common</artifactId>
+				<version>${common.version}</version>
+			</dependency>		
+			<dependency>
+				<groupId>com.hua</groupId>
+				<artifactId>io-core</artifactId>
+				<version>${io.core.version}</version>
+			</dependency>	
+			
+			<dependency>
+			    <groupId>com.google.guava</groupId>
+			    <artifactId>guava-io</artifactId>
+			    <version>${guava-io.version}</version>
+			</dependency>					
+		</dependencies>
+	</dependencyManagement>
   
  	<!-- 公共构建 -->
 	<build>
@@ -124,12 +147,20 @@
 				</configuration>
 			</plugin>
 
-			<!-- 解决 web项目pom.xml报错 -->
+			<!-- 要将源码放上去，需要加入这个插件 -->
 			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
+				<artifactId>maven-source-plugin</artifactId>
 				<configuration>
-					<version>${maven.plugin.war.version}</version>
+					<attach>true</attach>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 		</plugins>
